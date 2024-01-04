@@ -20,7 +20,7 @@ class HofuForm extends ConsumerWidget {
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
-                ref.read(hofuProvider.notifier).createHofu(myController.text);
+                ref.read(hofuProvider.notifier).createHofu();
                 Navigator.pop(context);
               },
               child: const Text('登録'),

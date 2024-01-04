@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hofu/my_home_page.dart';
+import 'package:hofu/share_preferences_instance.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await SharedPreferencesInstance.initialize();
+  
   runApp(
     const ProviderScope(
       child: MyApp(),

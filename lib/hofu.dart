@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hofu/share_preferences_instance.dart';
 import 'package:hofu/constants.dart';
 
 @immutable
@@ -19,15 +19,26 @@ class Hofu {
 }
 
 class HofuNotifier extends StateNotifier<Hofu> {
-  HofuNotifier() : super(const Hofu());
-  final myController = TextEditingController();
-  final Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
+  HofuNotifier() : super(const Hofu()) {
+    state = _loadHofu() ?? const Hofu();
+  }
 
-  void createHofu(String content) async {
-    final SharedPreferences prefs = await _prefs;
-    prefs.setString(LocalStorageKey.hofuContent, content).then((value) {
+  final myController = TextEditingController();
+  final _prefs = SharedPreferencesInstance().prefs;
+
+  void createHofu() {
+    final content = myController.text;
+    _prefs.setString(LocalStorageKey.hofuContent, content).then((value) {
       state = state.copyWith(content: content);
     });
+  }
+  
+  Hofu? _loadHofu() {
+    final content = _prefs.getString(LocalStorageKey.hofuContent);
+    if (content == null) {
+      return null;
+    }
+    return Hofu(content: content);
   }
 }
 
