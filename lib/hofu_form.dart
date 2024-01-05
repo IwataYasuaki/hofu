@@ -2,12 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hofu/hofu.dart';
 
-class HofuForm extends ConsumerWidget {
+class HofuForm extends ConsumerStatefulWidget {
   const HofuForm({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var myController = ref.watch(hofuProvider.notifier).myController;
+  HofuFormState createState() => HofuFormState();
+}
+
+class HofuFormState extends ConsumerState<HofuForm> {
+  final myController = TextEditingController();
+
+  @override
+  void dispose() {
+    myController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    myController.text = ref.read(hofuProvider).content;
+    var buttonText = myController.text.isEmpty ? '登録' : '更新';
 
     return Scaffold(
       appBar: AppBar(
@@ -20,10 +34,10 @@ class HofuForm extends ConsumerWidget {
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
-                ref.read(hofuProvider.notifier).createHofu();
+                ref.read(hofuProvider.notifier).createHofu(myController.text);
                 Navigator.pop(context);
               },
-              child: const Text('登録'),
+              child: Text(buttonText),
             ),
           ),
         ],

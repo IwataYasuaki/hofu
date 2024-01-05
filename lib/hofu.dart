@@ -23,11 +23,9 @@ class HofuNotifier extends StateNotifier<Hofu> {
     state = _loadHofu() ?? const Hofu();
   }
 
-  final myController = TextEditingController();
   final _prefs = SharedPreferencesInstance().prefs;
 
-  void createHofu() {
-    final content = myController.text;
+  void createHofu(String content) {
     _prefs.setString(LocalStorageKey.hofuContent, content).then((value) {
       state = state.copyWith(content: content);
     });

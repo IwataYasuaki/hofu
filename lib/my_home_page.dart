@@ -10,7 +10,12 @@ class MyHomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     Hofu hofu = ref.watch(hofuProvider);
 
-    // 抱負が未登録の場合、自動的に抱負フォームを表示させる
+    final AppBar appBar = AppBar(
+      title: const Text('抱負'),
+      centerTitle: true,
+    );
+
+    // 抱負が未登録の場合、自動的に抱負フォームを表示する。
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (hofu.content.isEmpty) {
         Navigator.push(
@@ -23,15 +28,34 @@ class MyHomePage extends ConsumerWidget {
       }
     });
 
+    // 抱負が未登録の場合、抱負フォームを開くボタンを表示する。
+    // 初回起動時、自動的に表示された抱負フォームが閉じられた場合。
+    if (hofu.content.isEmpty) {
+      return Scaffold(
+        appBar: appBar,
+        body: const Center(
+          child: CreateHofuButton(),
+        ),
+      );
+    }
+
+    // 通常のホーム画面を表示する。
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('抱負'),
-        centerTitle: true,
-      ),
+      appBar: appBar,
       body: Center(
-        child: hofu.content.isEmpty
-            ? const CreateHofuButton()
-            : HofuText(hofu: hofu),
+        child: HofuText(hofu: hofu),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const HofuForm(),
+              fullscreenDialog: true,
+            ),
+          );
+        },
+        child: const Icon(Icons.edit),
       ),
     );
   }
