@@ -35,9 +35,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'HOFU',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lime),
+        brightness: Brightness.light,
         useMaterial3: true,
         fontFamily: "Noto Sans JP",
+        colorSchemeSeed: Colors.blue,
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        useMaterial3: true,
+        fontFamily: "Noto Sans JP",
+        colorSchemeSeed: Colors.blue,
       ),
       home: const MyHomePage(),
     );

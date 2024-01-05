@@ -30,6 +30,7 @@ class MyHomePageState extends ConsumerState<MyHomePage> {
     final AppBar appBar = AppBar(
       title: const Text('抱負'),
       centerTitle: true,
+      elevation: 2,
     );
 
     // 抱負が未登録の場合、抱負フォームを開くボタンを表示する。
