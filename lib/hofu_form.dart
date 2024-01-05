@@ -10,18 +10,19 @@ class HofuForm extends ConsumerStatefulWidget {
 }
 
 class HofuFormState extends ConsumerState<HofuForm> {
-  final myController = TextEditingController();
+  final hofuContentController = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void dispose() {
-    myController.dispose();
+    hofuContentController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    myController.text = ref.read(hofuProvider).content;
-    var buttonText = myController.text.isEmpty ? '登録' : '更新';
+    hofuContentController.text = ref.read(hofuProvider).content;
+    var buttonText = hofuContentController.text.isEmpty ? '登録' : '更新';
 
     return Scaffold(
       appBar: AppBar(
@@ -34,8 +35,10 @@ class HofuFormState extends ConsumerState<HofuForm> {
                 backgroundColor: Theme.of(context).colorScheme.primary,
               ),
               onPressed: () {
-                ref.read(hofuProvider.notifier).createHofu(myController.text);
-                Navigator.pop(context);
+                if(_formKey.currentState!.validate()) {
+                  ref.read(hofuProvider.notifier).createHofu(hofuContentController.text);
+                  Navigator.pop(context);
+                }
               },
               child: Text(buttonText),
             ),
@@ -44,13 +47,22 @@ class HofuFormState extends ConsumerState<HofuForm> {
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: TextFormField(
-          controller: myController,
-          keyboardType: TextInputType.multiline,
-          autofocus: true,
-          maxLines: 100,
-          decoration: const InputDecoration(
-            hintText: '(例) 12月までに体重を60kgにする💪',
+        child: Form(
+          key: _formKey,
+          child: TextFormField(
+            controller: hofuContentController,
+            keyboardType: TextInputType.multiline,
+            autofocus: true,
+            maxLines: 100,
+            decoration: const InputDecoration(
+              hintText: '(例) 12月までに体重を60kgにする💪',
+            ),
+            validator: (value) {
+              if(value == null || value.isEmpty) {
+                return '何か文章を入力してください。';
+              }
+              return null;
+            }
           ),
         ),
       ),
