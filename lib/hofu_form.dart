@@ -64,7 +64,7 @@ class HofuFormState extends ConsumerState<HofuForm> {
             autofocus: true,
             maxLines: 100,
             decoration: const InputDecoration(
-              hintText: '(例) 12月までに体重を60kgにする💪',
+              hintText: '(例) 本を毎月1冊以上読む📚',
             ),
             validator: (value) {
               if(value == null || value.isEmpty) {
