@@ -25,10 +25,9 @@ class HofuNotifier extends StateNotifier<Hofu> {
 
   final _prefs = SharedPreferencesInstance().prefs;
 
-  void createHofu(String content) {
-    _prefs.setString(LocalStorageKey.hofuContent, content).then((value) {
-      state = state.copyWith(content: content);
-    });
+  void createHofu(String content) async {
+    await _prefs.setString(LocalStorageKey.hofuContent, content);
+    state = state.copyWith(content: content);
   }
   
   Hofu? _loadHofu() {
