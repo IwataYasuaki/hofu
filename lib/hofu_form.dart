@@ -33,6 +33,7 @@ class HofuFormState extends ConsumerState<HofuForm> {
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: ElevatedButton(
+              key: const Key('createButton'),
               style: ElevatedButton.styleFrom(
                 foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 backgroundColor: Theme.of(context).colorScheme.primary,
@@ -57,6 +58,7 @@ class HofuFormState extends ConsumerState<HofuForm> {
         child: Form(
           key: _formKey,
           child: TextFormField(
+            key: const Key('hofuTextFormField'),
             controller: hofuContentController,
             keyboardType: TextInputType.multiline,
             autofocus: true,
