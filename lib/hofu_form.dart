@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hofu/hofu.dart';
+import 'package:hofu/my_home_page.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class HofuForm extends ConsumerStatefulWidget {
   const HofuForm({super.key});
@@ -37,6 +40,10 @@ class HofuFormState extends ConsumerState<HofuForm> {
               onPressed: () {
                 if(_formKey.currentState!.validate()) {
                   ref.read(hofuProvider.notifier).createHofu(hofuContentController.text);
+                  _zonedScheduleNotification();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('毎月1日の20時に通知します。')),
+                  );
                   Navigator.pop(context);
                 }
               },
@@ -66,6 +73,27 @@ class HofuFormState extends ConsumerState<HofuForm> {
           ),
         ),
       ),
+    );
+  }
+
+  // 毎月1日の20時に通知する
+  Future<void> _zonedScheduleNotification() async {
+    await flutterLocalNotificationsPlugin.zonedSchedule(
+      0,
+      'HOFU',
+      '抱負を思い出しましょう💪',
+      tz.TZDateTime.local(2100, 1, 1, 20),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'hofu',
+          '毎月1日の通知',
+          channelDescription: '月に一度抱負を思い出すために、毎月1日の20時にリマインドメッセージを通知します。',
+        ),
+      ),
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+      matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
     );
   }
 }
